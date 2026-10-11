@@ -3,483 +3,98 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Ngọc Rồng Offline</title>
-  <style>
-    * { box-sizing: border-box; }
-    body {
-      margin: 0;
-      font-family: Arial, sans-serif;
-      background: linear-gradient(180deg, #0b1220, #121f33);
-      color: #fff;
-      min-height: 100vh;
-      display: grid;
-      place-items: center;
-    }
-    .game {
-      width: min(960px, 92vw);
-      background: rgba(18, 26, 38, 0.9);
-      border: 3px solid #ffca28;
-      border-radius: 18px;
-      box-shadow: 0 20px 60px rgba(0,0,0,0.45);
-      overflow: hidden;
-    }
-    .topbar {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 16px 20px;
-      background: rgba(255, 202, 40, 0.12);
-      border-bottom: 2px solid rgba(255, 202, 40, 0.4);
-    }
-    .title {
-      font-size: 28px;
-      font-weight: 700;
-      color: #ffd54f;
-    }
-    .level {
-      font-size: 18px;
-      font-weight: 700;
-      background: #2e7d32;
-      padding: 8px 14px;
-      border-radius: 999px;
-    }
-    .arena {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 20px;
-      padding: 20px;
-    }
-    .fighter-card {
-      background: rgba(255,255,255,0.04);
-      border: 2px solid rgba(255,255,255,0.08);
-      border-radius: 16px;
-      padding: 16px;
-    }
-    .fighter-header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      margin-bottom: 14px;
-    }
-    .fighter-name {
-      font-size: 24px;
-      font-weight: 700;
-    }
-    .fighter-type {
-      font-size: 12px;
-      padding: 5px 8px;
-      border-radius: 999px;
-      background: rgba(76,175,80,0.2);
-      color: #a5d6a7;
-    }
-    .avatar {
-      font-size: 70px;
-      text-align: center;
-      margin-bottom: 12px;
-      filter: drop-shadow(0 8px 12px rgba(0,0,0,0.3));
-    }
-    .hp-box, .ki-box {
-      margin-bottom: 12px;
-    }
-    .label-row {
-      display: flex;
-      justify-content: space-between;
-      font-size: 14px;
-      color: #dfe7ff;
-      margin-bottom: 6px;
-    }
-    .bar {
-      width: 100%;
-      height: 16px;
-      background: rgba(255,255,255,0.1);
-      border-radius: 999px;
-      overflow: hidden;
-      border: 1px solid rgba(255,255,255,0.1);
-    }
-    .fill {
-      height: 100%;
-      width: 100%;
-      transition: width 0.25s ease;
-      border-radius: inherit;
-    }
-    .hp-fill { background: linear-gradient(90deg, #ef5350, #f44336); }
-    .ki-fill { background: linear-gradient(90deg, #42a5f5, #1e88e5); }
-    .actions {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-      margin-top: 16px;
-    }
-    button {
-      border: none;
-      border-radius: 12px;
-      padding: 12px 14px;
-      font-size: 16px;
-      font-weight: 700;
-      cursor: pointer;
-      transition: transform 0.1s ease, opacity 0.2s ease;
-    }
-    button:hover { transform: translateY(-1px); }
-    button:active { transform: translateY(1px); }
-    .attack { background: #ef4444; color: white; }
-    .special { background: #f59e0b; color: #1f2937; }
-    .heal { background: #22c55e; color: white; }
-    .select-btn { background: #4f46e5; color: white; }
-    .restart { background: #eab308; color: #1f2937; }
-    .chooser {
-      padding: 20px;
-      border-top: 2px solid rgba(255,255,255,0.08);
-      display: flex;
-      flex-wrap: wrap;
-      gap: 12px;
-      justify-content: center;
-    }
-    .fighter-select {
-      background: rgba(255,255,255,0.05);
-      border: 1px solid rgba(255,255,255,0.1);
-      color: white;
-      padding: 10px 16px;
-      border-radius: 12px;
-      font-weight: 700;
-      cursor: pointer;
-    }
-    .fighter-select.active {
-      background: linear-gradient(135deg, #8b5cf6, #3b82f6);
-      border-color: transparent;
-    }
-    .battle-log {
-      margin: 0 20px 20px;
-      background: rgba(8, 12, 20, 0.7);
-      border: 1px solid rgba(255,255,255,0.08);
-      border-radius: 12px;
-      min-height: 110px;
-      padding: 14px 16px;
-      color: #dbeafe;
-      line-height: 1.6;
-    }
-    .status {
-      color: #fbbf24;
-      font-weight: 700;
-    }
-    @media (max-width: 700px) {
-      .arena {
-        grid-template-columns: 1fr;
-      }
-      .title { font-size: 22px; }
-      .fighter-name { font-size: 20px; }
-      .avatar { font-size: 58px; }
-    }
-  </style>
+  <title>Dragon Battle</title>
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <div class="game">
+  <div class="game-shell">
     <div class="topbar">
       <div class="title">Ngọc Rồng Offline</div>
-      <div class="level" id="levelLabel">Cấp 1</div>
+      <div class="level" id="levelBadge">Cấp 1</div>
     </div>
 
-    <div class="chooser" id="chooser"></div>
+    <div class="character-picker" id="characterPicker"></div>
 
-    <div class="arena">
-      <div class="fighter-card">
-        <div class="fighter-header">
-          <div class="fighter-name" id="playerName">-</div>
-          <div class="fighter-type" id="playerType">-</div>
+    <div class="battle-scene">
+      <div class="fighter-block player">
+        <div class="fighter-top">
+          <span id="playerName">-</span>
+          <span class="tag" id="playerType">-</span>
         </div>
-        <div class="avatar" id="playerAvatar">🦸</div>
 
-        <div class="hp-box">
-          <div class="label-row">
+        <div class="avatar-area">
+          <div id="playerAvatar" class="avatar player-avatar">🦸</div>
+        </div>
+
+        <div class="bars">
+          <div class="bar-label">
             <span>HP</span>
             <span id="playerHpText">0 / 0</span>
           </div>
           <div class="bar">
-            <div id="playerHpBar" class="fill hp-fill"></div>
+            <div id="playerHpBar" class="fill hp"></div>
           </div>
         </div>
 
-        <div class="ki-box">
-          <div class="label-row">
+        <div class="bars">
+          <div class="bar-label">
             <span>Ki</span>
             <span id="playerKiText">0 / 0</span>
           </div>
           <div class="bar">
-            <div id="playerKiBar" class="fill ki-fill"></div>
+            <div id="playerKiBar" class="fill ki"></div>
           </div>
         </div>
 
-        <div class="actions">
+        <div class="action-row">
           <button class="attack" onclick="doAction('attack')">Đánh thường</button>
-          <button class="special" onclick="doAction('special')">Chiêu đặc biệt</button>
+          <button class="special" onclick="doAction('special')">Kỹ năng</button>
           <button class="heal" onclick="doAction('heal')">Hồi phục</button>
         </div>
       </div>
 
-      <div class="fighter-card">
-        <div class="fighter-header">
-          <div class="fighter-name" id="enemyName">-</div>
-          <div class="fighter-type" id="enemyType">-</div>
+      <div class="fighter-block enemy">
+        <div class="fighter-top">
+          <span id="enemyName">-</span>
+          <span class="tag enemy-tag" id="enemyType">-</span>
         </div>
-        <div class="avatar" id="enemyAvatar">👹</div>
 
-        <div class="hp-box">
-          <div class="label-row">
+        <div class="avatar-area">
+          <div id="enemyAvatar" class="avatar enemy-avatar">👹</div>
+        </div>
+
+        <div class="bars">
+          <div class="bar-label">
             <span>HP</span>
             <span id="enemyHpText">0 / 0</span>
           </div>
           <div class="bar">
-            <div id="enemyHpBar" class="fill hp-fill"></div>
+            <div id="enemyHpBar" class="fill hp"></div>
           </div>
         </div>
 
-        <div class="ki-box">
-          <div class="label-row">
+        <div class="bars">
+          <div class="bar-label">
             <span>Ki</span>
             <span id="enemyKiText">0 / 0</span>
           </div>
           <div class="bar">
-            <div id="enemyKiBar" class="fill ki-fill"></div>
+            <div id="enemyKiBar" class="fill ki"></div>
           </div>
         </div>
 
-        <div class="actions">
+        <div class="action-row">
           <button class="restart" onclick="restartGame()">Chơi lại</button>
         </div>
       </div>
     </div>
 
-    <div class="battle-log" id="battleLog">
-      Chọn nhân vật để bắt đầu chiến đấu.
+    <div id="battleLog" class="battle-log">
+      Chọn nhân vật để bắt đầu trận đấu.
     </div>
   </div>
 
-  <script>
-    const fighters = [
-      { id: "goku", name: "Goku", type: "Saiyan", avatar: "🐉", hp: 120, maxHp: 120, ki: 30, maxKi: 30, attack: 18, special: 28, heal: 14 },
-      { id: "vegeta", name: "Vegeta", type: "Saiyan", avatar: "🦅", hp: 110, maxHp: 110, ki: 35, maxKi: 35, attack: 17, special: 26, heal: 12 },
-      { id: "piccolo", name: "Piccolo", type: "Namek", avatar: "🌿", hp: 130, maxHp: 130, ki: 25, maxKi: 25, attack: 16, special: 24, heal: 18 },
-      { id: "krillin", name: "Krillin", type: "Nhân vật", avatar: "🥋", hp: 100, maxHp: 100, ki: 28, maxKi: 28, attack: 15, special: 22, heal: 16 }
-    ];
-
-    const enemies = [
-      { id: "frieza", name: "Frieza", type: "Ác quỷ", avatar: "👾", hp: 100, maxHp: 100, ki: 30, maxKi: 30, attack: 15, special: 25, heal: 10 },
-      { id: "cell", name: "Cell", type: "Sinh vật", avatar: "🧬", hp: 120, maxHp: 120, ki: 28, maxKi: 28, attack: 16, special: 26, heal: 12 },
-      { id: "buu", name: "Majin Buu", type: "Boss", avatar: "🧸", hp: 140, maxHp: 140, ki: 40, maxKi: 40, attack: 20, special: 30, heal: 14 },
-      { id: "broly", name: "Broly", type: "Sát thủ", avatar: "🔥", hp: 125, maxHp: 125, ki: 35, maxKi: 35, attack: 18, special: 32, heal: 12 }
-    ];
-
-    const state = {
-      selectedFighter: null,
-      player: null,
-      enemy: null,
-      level: 1,
-      battleEnded: false,
-      log: []
-    };
-
-    function renderChooser() {
-      const chooser = document.getElementById("chooser");
-      chooser.innerHTML = "";
-
-      fighters.forEach(f => {
-        const btn = document.createElement("button");
-        btn.className = "fighter-select" + (state.selectedFighter && state.selectedFighter.id === f.id ? " active" : "");
-        btn.textContent = f.name;
-        btn.onclick = () => {
-          state.selectedFighter = f;
-          startBattle();
-          renderChooser();
-        };
-        chooser.appendChild(btn);
-      });
-    }
-
-    function randomEnemy() {
-      const index = Math.floor(Math.random() * enemies.length);
-      const e = enemies[index];
-      return {
-        ...e,
-        hp: e.hp + (state.level - 1) * 6,
-        maxHp: e.hp + (state.level - 1) * 6,
-        attack: e.attack + (state.level - 1),
-        special: e.special + (state.level - 1),
-        heal: e.heal + Math.floor((state.level - 1) / 2)
-      };
-    }
-
-    function startBattle() {
-      if (!state.selectedFighter) return;
-
-      const base = fighters.find(f => f.id === state.selectedFighter.id);
-      state.player = {
-        ...base,
-        hp: base.maxHp,
-        ki: base.maxKi
-      };
-      state.enemy = randomEnemy();
-      state.battleEnded = false;
-      addLog(`Bạn chọn ${state.player.name} và chạm trán ${state.enemy.name}!`);
-      render();
-    }
-
-    function restartGame() {
-      state.level = 1;
-      state.selectedFighter = null;
-      state.player = null;
-      state.enemy = null;
-      state.battleEnded = false;
-      state.log = [];
-      document.getElementById("battleLog").innerHTML = "Chọn nhân vật để bắt đầu chiến đấu.";
-      renderChooser();
-      render();
-    }
-
-    function addLog(message) {
-      state.log.push(message);
-      const logBox = document.getElementById("battleLog");
-      logBox.innerHTML = state.log.slice(-8).map(line => `<div>${line}</div>`).join("");
-    }
-
-    function render() {
-      const playerName = document.getElementById("playerName");
-      const playerType = document.getElementById("playerType");
-      const playerAvatar = document.getElementById("playerAvatar");
-      const enemyName = document.getElementById("enemyName");
-      const enemyType = document.getElementById("enemyType");
-      const enemyAvatar = document.getElementById("enemyAvatar");
-      const levelLabel = document.getElementById("levelLabel");
-
-      levelLabel.textContent = `Cấp ${state.level}`;
-
-      if (!state.player || !state.enemy) {
-        playerName.textContent = "-";
-        playerType.textContent = "-";
-        playerAvatar.textContent = "🦸";
-        enemyName.textContent = "-";
-        enemyType.textContent = "-";
-        enemyAvatar.textContent = "👹";
-        return;
-      }
-
-      playerName.textContent = state.player.name;
-      playerType.textContent = state.player.type;
-      playerAvatar.textContent = state.player.avatar;
-
-      enemyName.textContent = state.enemy.name;
-      enemyType.textContent = state.enemy.type;
-      enemyAvatar.textContent = state.enemy.avatar;
-
-      updateBar("playerHpBar", state.player.hp, state.player.maxHp);
-      updateBar("playerKiBar", state.player.ki, state.player.maxKi);
-      updateBar("enemyHpBar", state.enemy.hp, state.enemy.maxHp);
-      updateBar("enemyKiBar", state.enemy.ki, state.enemy.maxKi);
-
-      document.getElementById("playerHpText").textContent = `${state.player.hp} / ${state.player.maxHp}`;
-      document.getElementById("playerKiText").textContent = `${state.player.ki} / ${state.player.maxKi}`;
-      document.getElementById("enemyHpText").textContent = `${state.enemy.hp} / ${state.enemy.maxHp}`;
-      document.getElementById("enemyKiText").textContent = `${state.enemy.ki} / ${state.enemy.maxKi}`;
-    }
-
-    function updateBar(id, current, maxValue) {
-      const el = document.getElementById(id);
-      const percent = Math.max(0, Math.min(100, (current / maxValue) * 100));
-      el.style.width = `${percent}%`;
-    }
-
-    function doAction(action) {
-      if (!state.player || !state.enemy || state.battleEnded) return;
-
-      let playerDamage = 0;
-      let enemyDamage = 0;
-
-      if (action === "attack") {
-        playerDamage = state.player.attack + randomInt(0, 8);
-        state.enemy.hp = Math.max(0, state.enemy.hp - playerDamage);
-        state.player.ki = Math.min(state.player.maxKi, state.player.ki + 4);
-        addLog(`${state.player.name} dùng đánh thường, gây ${playerDamage} sát thương.`);
-      }
-
-      if (action === "special") {
-        if (state.player.ki < 10) {
-          addLog(`${state.player.name} không đủ ki để dùng chiêu đặc biệt.`);
-          enemyDamage = enemyTurn();
-          return;
-        }
-        state.player.ki = Math.max(0, state.player.ki - 10);
-        playerDamage = state.player.special + randomInt(2, 12);
-        state.enemy.hp = Math.max(0, state.enemy.hp - playerDamage);
-        addLog(`${state.player.name} tung chiêu đặc biệt, gây ${playerDamage} sát thương.`);
-      }
-
-      if (action === "heal") {
-        const heal = state.player.heal + randomInt(2, 10);
-        state.player.hp = Math.min(state.player.maxHp, state.player.hp + heal);
-        state.player.ki = Math.min(state.player.maxKi, state.player.ki + 3);
-        addLog(`${state.player.name} hồi phục ${heal} HP.`);
-      }
-
-      if (state.enemy.hp <= 0) {
-        handleWin();
-        return;
-      }
-
-      enemyDamage = enemyTurn();
-      if (state.player.hp <= 0) {
-        handleLose();
-        return;
-      }
-
-      render();
-    }
-
-    function enemyTurn() {
-      const enemyChoice = Math.random();
-      let damage = 0;
-
-      if (enemyChoice < 0.45) {
-        damage = state.enemy.attack + randomInt(0, 10);
-        state.player.hp = Math.max(0, state.player.hp - damage);
-        addLog(`${state.enemy.name} đánh thường, gây ${damage} sát thương.`);
-      } else if (enemyChoice < 0.75 && state.enemy.ki >= 8) {
-        state.enemy.ki = Math.max(0, state.enemy.ki - 8);
-        damage = state.enemy.special + randomInt(2, 12);
-        state.player.hp = Math.max(0, state.player.hp - damage);
-        addLog(`${state.enemy.name} dùng chiêu đặc biệt, gây ${damage} sát thương.`);
-      } else {
-        const heal = state.enemy.heal + randomInt(0, 8);
-        state.enemy.hp = Math.min(state.enemy.maxHp, state.enemy.hp + heal);
-        state.enemy.ki = Math.min(state.enemy.maxKi, state.enemy.ki + 5);
-        addLog(`${state.enemy.name} hồi phục ${heal} HP.`);
-      }
-
-      render();
-      return damage;
-    }
-
-    function handleWin() {
-      state.battleEnded = true;
-      state.level += 1;
-      addLog(`<span class="status">Chiến thắng! Bạn đã đánh bại ${state.enemy.name}.</span>`);
-      const nextEnemy = randomEnemy();
-      state.enemy = nextEnemy;
-      state.player.hp = Math.min(state.player.maxHp, state.player.hp + 16);
-      state.player.ki = state.player.maxKi;
-      addLog(`Đối thủ mới: ${state.enemy.name}. Hãy tiếp tục!`);
-      render();
-    }
-
-    function handleLose() {
-      state.battleEnded = true;
-      addLog(`<span class="status">Thua trận! Hãy chọn lại nhân vật để thử lại.</span>`);
-      render();
-    }
-
-    function randomInt(min, max) {
-      return Math.floor(Math.random() * (max - min + 1)) + min;
-    }
-
-    renderChooser();
-    render();
-  </script>
+  <audio id="attackSound" src="data:audio/wav;base64,UklGRiQAAABXQVZFZm10IBAAAAABAAEA..."></audio>
+  <script src="script.js"></script>
 </body>
 </html>
